@@ -1,0 +1,50 @@
+{
+  "entities": {
+    "Booking": {
+      "title": "Booking",
+      "description": "An appointment booking request.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The UID of the user who made the booking."
+        },
+        "patientName": {
+          "type": "string",
+          "description": "Name of the patient."
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "Contact phone number."
+        },
+        "preferredDate": {
+          "type": "string",
+          "description": "Preferred appointment date."
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "description": "Booking status: pending, confirmed, cancelled."
+        }
+      },
+      "required": [
+        "userId",
+        "patientName",
+        "phoneNumber",
+        "preferredDate",
+        "createdAt",
+        "status"
+      ]
+    }
+  },
+  "firestore": {
+    "bookings/{bookingId}": {
+      "schema": {
+        "$ref": "#/entities/Booking"
+      },
+      "description": "User requested appointments."
+    }
+  }
+}
