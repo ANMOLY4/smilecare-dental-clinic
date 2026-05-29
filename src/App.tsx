@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import Chatbot from './components/Chatbot';
 import Dashboard from './components/Dashboard';
 import { auth, googleProvider, db } from './firebase';
-import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
+import { signInWithRedirect, signOut, onAuthStateChanged } from 'firebase/auth';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import type { User } from 'firebase/auth';
 import {
@@ -42,7 +42,7 @@ export default function App() {
 
   const handleLogin = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      await signInWithRedirect(auth, googleProvider);
     } catch (error) {
       console.error(error);
     }
