@@ -3,9 +3,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import Chatbot from './components/Chatbot';
 import Dashboard from './components/Dashboard';
 import { auth, googleProvider, db } from './firebase';
-import { signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from 'firebase/auth';
+import { signInWithRedirect, signOut, onAuthStateChanged, getRedirectResult } from 'firebase/auth';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import type { User } from 'firebase/auth';
+import type { Auth, User } from 'firebase/auth';
 import {
   Phone,
   Mail,
@@ -34,6 +34,31 @@ export default function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+  const initAuth = async () => {
+    setAuthLoading(true);
+    
+    try {
+      // Google se wapas aane ke baad result pakdo
+      const result = await getRedirectResult(auth);
+      if (result?.user?.email) {
+        console.log("Login success:", result.user.email);
+      }
+    } catch (error) {
+      console.error("Redirect error:", error);
+    }
+    
+    // Fir user state suno
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setAuthLoading(false);
+    });
+    
+    return unsubscribe;
+  };
+  
+  initAuth();
+}, []);
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
@@ -42,7 +67,7 @@ export default function App() {
 
   const handleLogin = async () => {
     try {
-      await signInWithRedirect(auth, googleProvider);
+      await signInWithGoogle();
     } catch (error) {
       console.error(error);
     }
@@ -647,3 +672,12 @@ export default function App() {
     </div>
   );
 }
+
+async function signInWithGoogle() {
+  await signInWithRedirect(auth, googleProvider);
+}
+
+function setAuthLoading(_value: boolean) {
+  // No-op placeholder for auth loading state handling.
+}
+
