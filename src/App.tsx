@@ -66,13 +66,16 @@ export default function App() {
   }, []);
 
   const handleLogin = async () => {
-    try {
-      await signInWithGoogle();
-    } catch (error) {
-      console.error(error);
-    }
+    await signInWithRedirect(auth, googleProvider); // ✅ Sirf button click pe
   };
 
+useEffect(() => {
+  const initAuth = async () => {
+    await getRedirectResult(auth); // Sirf result pakdo
+    onAuthStateChanged(auth, setUser);
+  };
+  initAuth();
+}, []);
   const handleLogout = async () => {
     try {
       await signOut(auth);
